@@ -11,5 +11,13 @@ module Curb
     def steps
       @steps.reject { |i| i.type == :feature }
     end
+
+    def steps_types
+      steps.map(&:type)
+    end
+
+    def steps_phrases
+      steps.map(&:phrase)
+    end
   end
 end
