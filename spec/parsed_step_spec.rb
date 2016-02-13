@@ -5,15 +5,15 @@ describe Curb::ParsedStep do
 
   describe :parsed_step do
     describe :type do
-        it :equals_given do
-            expect(parsed_step.type).to eq :given
-        end
+      it :equals_given do
+        expect(parsed_step.type).to eq :given
+      end
     end
     
     describe :phrase do
-        it :equals do
-            expect(parsed_step.phrase).to eq 'The application is open'
-        end
+      it :equals do
+        expect(parsed_step.phrase).to eq 'The application is open'
+      end
     end
   end
 end
