@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "curb"
+
+def features_dir
+  File.join(Dir.pwd, 'features')
+end
+
+def features_files
+  Dir["#{features_dir}/**/*.feature"]
+end
+
+def steps_dir
+  File.join(features_dir, 'steps')
+end
+
+def steps_files
+  Dir["#{steps_dir}/**/*.rb"]
+end
+
+# Include steps files
+steps_files.each { |file| require file }
+
+# Parse feature files
+features_files
+  .reduce([]) do |features, feature|
+    features << Curb::GherkinParser.call(IO.read(feature))
+  end
+  .map do |feature|
+    Curb::Runner.instance.add_feature(feature)
+  end
+
+Curb::Runner.instance.run

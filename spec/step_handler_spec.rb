@@ -13,7 +13,7 @@ describe Curb::StepHandler do
 
   describe :step_handler do
     before :each do
-      step_handler.run("Hello, World!")
+      step_handler.call("Hello, World!")
     end
 
     it :matched_and_ran do

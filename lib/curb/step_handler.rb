@@ -11,7 +11,7 @@ module Curb
       phrase =~ @pattern
     end
 
-    def run(phrase)
+    def call(phrase)
       unless test(phrase)
         fail "Phrase '#{phrase}' did not match Step Handler's pattern #{@pattern}"
       end
