@@ -19,7 +19,7 @@ module Curb
         puts "-"*80
 
         feature.scenarios.each do |scenario|
-          puts "Scenario: #{scenario.phrase}"
+          puts "\nScenario: #{scenario.phrase}\n\n"
 
           scenario.steps.each do |step|
             puts "#{step.type.capitalize} #{step.phrase}"
@@ -54,18 +54,19 @@ module Curb
         end
       end
 
-      puts "\nTotal time elapsed #{total_time} milliseconds"
+      puts "\nTotal time elapsed #{total_time} milliseconds\n\n"
 
-      puts "\n"
-      puts "-"*80
-      puts "Failed Tests (#{failed_tests.length})"
-      puts "-"*80
+      unless failed_tests.empty?
+        puts "-"*80
+        puts "Failed Tests (#{failed_tests.length})"
+        puts "-"*80
 
-      failed_tests.each.with_index do |test, i|
-        feature, step, ex = test
-        backtrace = ex.backtrace.join("\n\t\t")
+        failed_tests.each.with_index do |test, i|
+          feature, step, ex = test
+          backtrace = ex.backtrace.join("\n\t\t")
 
-        puts "#{i}) #{feature.phrase}: #{step.phrase}\n\t#{ex.class}: #{ex.message}\n\t#{backtrace}"
+          puts "#{i}) #{feature.phrase}: #{step.phrase}\n\t#{ex.class}: #{ex.message}\n\t#{backtrace}"
+        end
       end
     end
 
