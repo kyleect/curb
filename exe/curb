@@ -28,7 +28,7 @@ features_files
     features << Curb::GherkinParser.call(IO.read(feature))
   end
   .map do |feature|
-    Curb::Runner.instance.add_feature(feature)
+    Curb::Runner.add_feature(feature)
   end
 
-Curb::Runner.instance.run
+Curb::Runner.call
