@@ -1,4 +1,5 @@
 require 'singleton'
+require 'paint'
 
 module Curb
   class Runner
@@ -15,21 +16,23 @@ module Curb
 
       @features.each do |feature|
         puts "-"*80
-        puts "Feature: #{feature.phrase}"
+        puts "#{Paint['Feature:', :bold]} #{feature.phrase}"
         puts "-"*80
+        puts "\n"
 
         feature.scenarios.each do |scenario|
-          puts "\nScenario: #{scenario.phrase}\n\n"
+          puts "#{Paint['Scenario:', :bold]} #{scenario.phrase}"
+          puts "-"*80+"\n\n"
 
           scenario.steps.each do |step|
-            puts "#{step.type.capitalize} #{step.phrase}"
+            puts "#{Paint[step.type.capitalize, :bold, :cyan]} #{step.phrase}"
 
             handler = @handlers.find do |handler|
               handler.test(step.phrase)
             end
 
             if handler.nil?
-              puts "\tNo handler defined. Skipping"
+              puts "#{Paint['No handler defined. Skipping.', :yellow]}\n\n"
               next
             end
 
@@ -37,10 +40,10 @@ module Curb
 
             begin
               handler.call(step.phrase)
-              puts "\tPassed"
+              puts Paint["Passed", :green]
             rescue => e
               failed_tests << [feature, step, e]
-              puts "\tFailed"
+              puts Paint["Failed", :red]
             end
 
             handler_end = Time.now
@@ -49,12 +52,12 @@ module Curb
 
             total_time += time_taken
 
-            puts "\tTime elapsed #{time_taken} milliseconds"
+            puts "#{time_taken.round(3)} milliseconds\n\n"
           end
         end
       end
 
-      puts "\nTotal time elapsed #{total_time} milliseconds\n\n"
+      puts "Total: #{total_time.round(3)} milliseconds\n\n"
 
       unless failed_tests.empty?
         puts "-"*80
@@ -65,7 +68,7 @@ module Curb
           feature, step, ex = test
           backtrace = ex.backtrace.join("\n\t\t")
 
-          puts "#{i}) #{feature.phrase}: #{step.phrase}\n\t#{ex.class}: #{ex.message}\n\t#{backtrace}"
+          puts "#{i}) #{feature.phrase}: #{step.phrase}\n\t#{Paint[ex.class, :red]}: #{ex.message}\n\t#{backtrace}"
         end
       end
     end
