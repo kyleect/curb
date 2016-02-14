@@ -4,6 +4,7 @@ require 'paint'
 module Curb
   class Runner
     include Singleton
+    extend Curb::RunnerInstanceAliases
     include Curb::RunnerDefaultPrintHooks
 
     def initialize
@@ -58,41 +59,21 @@ module Curb
       print_failed_steps(failed_tests) unless failed_tests.empty?
     end
 
-    def self.call
-      instance.call
-    end
-
     def reset
       @features = []
       @handlers = []
-    end
-
-    def self.reset
-      instance.reset
     end
 
     def add_feature(feature)
       @features << feature
     end
 
-    def self.add_feature(feature)
-      instance.add_feature(feature)
-    end
-
     def add_handler(handler)
       @handlers << handler
     end
 
-    def self.add_handler(handler)
-      instance.add_handler(handler)
-    end
-
     def add_handlers(handlers=[])
       handlers.map { |handler| add_handler(handler) }
-    end
-
-    def self.add_handlers(handlers=[])
-      instance.add_handlers(handlers)
     end
   end
 end

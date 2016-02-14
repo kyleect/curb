@@ -5,6 +5,7 @@ require "curb/parsed_scenario"
 require "curb/parsed_step"
 require "curb/step_handler"
 require "curb/runner_default_print_hooks"
+require "curb/runner_instance_aliases"
 require "curb/runner"
 
 module Curb
