@@ -1,5 +1,4 @@
 require 'singleton'
-require 'paint'
 
 module Curb
   class Runner
