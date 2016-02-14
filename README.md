@@ -40,23 +40,20 @@ Then I was able to login
 ```ruby
 # ./features/steps/login_steps.rb
 
-handlers = []
+Curb::Runner.add_handlers([
+	Curb::StepHandler.new(/I (am|am not) logged in/) do |logged_in|
+		# Setup authentication state based on logged_in
+	end,
 
-handlers << Curb::StepHandler.new(/I (am|am not) logged in/) do |logged_in|
-	# Setup authentication state based on logged_in
-end
+	Curb::StepHandler.new(/I login with (valid|invalid) credentials/) do |are_valid|
+		# Fill out login form with valid/invalid credentials
+		# Submit login form
+	end,
 
-handlers << Curb::StepHandler.new(/I login with (valid|invalid) credentials/) do |are_valid|
-	# Fill out login form with valid/invalid credentials
-	# Submit login form
-end
-
-handlers << Curb::StepHandler.new(/I (was|was not) able to login/) do |name|
-	# Assert login was/wasn't successful
-end
-
-# Register handler to the Runner instance
-Curb::Runner.instance.add_handlers(handlers)
+	Curb::StepHandler.new(/I (was|was not) able to login/) do |name|
+		# Assert login was/wasn't successful
+	end
+])
 ```
 
 ### Run tests
