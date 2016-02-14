@@ -1,8 +1,6 @@
 # Curb
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/curb`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Curb is a learning excercise implementing a gherkin parser and test runner.
 
 ## Installation
 
@@ -22,7 +20,50 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+1. Write gerkin in to `features/**/*.feature` files
+2. Define step handlers in `features/steps/**/*.rb`
+
+### Gherkin/Feature Files
+
+```gherkin
+# ./features/login.feature
+
+Feature: Login
+Scenario: Login sucessfully
+Given I am not logged in
+When I login with valid credentials
+Then I was able to login
+```
+
+### Step Handlers
+
+```ruby
+# ./features/steps/login_steps.rb
+
+handlers = []
+
+handlers << Curb::StepHandler.new(/I (am|am not) logged in/) do |logged_in|
+	# Setup authentication state based on logged_in
+end
+
+handlers << Curb::StepHandler.new(/I login with (valid|invalid) credentials/) do |are_valid|
+	# Fill out login form with valid/invalid credentials
+	# Submit login form
+end
+
+handlers << Curb::StepHandler.new(/I (was|was not) able to login/) do |name|
+	# Assert login was/wasn't successful
+end
+
+# Register handler to the Runner instance
+Curb::Runner.instance.add_handlers(handlers)
+```
+
+### Run tests
+
+Run the `curb` command in your project's root directory
+
+    $ curb
 
 ## Development
 
@@ -32,7 +73,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/curb.
+Bug reports and pull requests are welcome on GitHub at https://github.com/kyleect/curb.
 
 
 ## License
