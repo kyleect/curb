@@ -4,6 +4,7 @@ require 'paint'
 module Curb
   class Runner
     include Singleton
+    include Curb::RunnerDefaultPrintHooks
 
     def initialize
       @features = []
@@ -15,24 +16,20 @@ module Curb
       total_time = 0
 
       @features.each do |feature|
-        puts "-"*80
-        puts "#{Paint['Feature:', :bold]} #{feature.phrase}"
-        puts "-"*80
-        puts "\n"
+        print_feature(feature)
 
         feature.scenarios.each do |scenario|
-          puts "#{Paint['Scenario:', :bold]} #{scenario.phrase}"
-          puts "-"*80+"\n\n"
+          print_scenario(scenario)
 
           scenario.steps.each do |step|
-            puts "#{Paint[step.type.capitalize, :bold, :cyan]} #{step.phrase}"
+            print_step(step)
 
             handler = @handlers.find do |handler|
               handler.test(step.phrase)
             end
 
             if handler.nil?
-              puts "#{Paint['No handler defined. Skipping.', :yellow]}\n\n"
+              print_no_handler_found
               next
             end
 
@@ -40,37 +37,25 @@ module Curb
 
             begin
               handler.call(step.phrase)
-              puts Paint["Passed", :green]
+              print_step_result(true)
             rescue => e
               failed_tests << [feature, step, e]
-              puts Paint["Failed", :red]
+              print_step_result(false)
             end
 
             handler_end = Time.now
 
             time_taken = (handler_end - handler_start) * 1000
-
             total_time += time_taken
 
-            puts "#{time_taken.round(3)} milliseconds\n\n"
+            print_step_time_taken(time_taken)
           end
         end
       end
 
-      puts "Total: #{total_time.round(3)} milliseconds\n\n"
+      print_total_time_taken(total_time)
 
-      unless failed_tests.empty?
-        puts "-"*80
-        puts "Failed Tests (#{failed_tests.length})"
-        puts "-"*80
-
-        failed_tests.each.with_index do |test, i|
-          feature, step, ex = test
-          backtrace = ex.backtrace.join("\n\t\t")
-
-          puts "#{i}) #{feature.phrase}: #{step.phrase}\n\t#{Paint[ex.class, :red]}: #{ex.message}\n\t#{backtrace}"
-        end
-      end
+      print_failed_steps(failed_tests) unless failed_tests.empty?
     end
 
     def self.call
