@@ -11,6 +11,7 @@ module Curb
 
     def call
       failed_tests = []
+      total_time = 0
 
       @features.each do |feature|
         puts "-"*80
@@ -44,10 +45,16 @@ module Curb
 
             handler_end = Time.now
 
-            puts "\tTime elapsed #{(handler_end - handler_start)*1000} milliseconds"
+            time_taken = (handler_end - handler_start) * 1000
+
+            total_time += time_taken
+
+            puts "\tTime elapsed #{time_taken} milliseconds"
           end
         end
       end
+
+      puts "\nTotal time elapsed #{total_time} milliseconds"
 
       puts "\n"
       puts "-"*80
