@@ -39,8 +39,16 @@ module Curb
     end
 
     def validate_parse(steps)
+      if steps.select { |i| i.type == :feature }.empty?
+        raise "No features found. One or more features are required."
+      end
+
       unless steps.select { |i| i.type == :feature }.length == 1
-        raise "More than one feature step defined in feature file"
+        raise "More than one feature step defined in feature file."
+      end
+
+      if steps.select { |i| i.type == :scenario }.empty?
+        raise "One or more scenarios are required for each feature."
       end
     end
   end

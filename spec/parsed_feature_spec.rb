@@ -11,35 +11,9 @@ describe Curb::ParsedFeature do
       end
     end
 
-    describe :steps do
-      describe :steps_types do |variable|
-        it :ordered do
-          expect(parsed_feature.steps_types).to eq [
-            :scenario,
-            :given,
-            :and,
-            :when,
-            :and,
-            :and,
-            :then,
-            :and
-          ]
-        end
-      end
-
-      describe :steps_phrases do |variable|
-        it :ordered do
-          expect(parsed_feature.steps_phrases).to eq [
-            'Test scenario',
-            'some precondition',
-            'some other precondition',
-            'some action by the actor',
-            'some other action',
-            'yet another action',
-            'some testable outcome is achieved',
-            'something else we can check happens too'
-          ]
-        end
+    describe :scenarios do
+      it :count do
+        expect(parsed_feature.scenarios.length).to eq 1
       end
     end
   end
