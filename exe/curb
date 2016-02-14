@@ -3,6 +3,11 @@
 require "bundler/setup"
 require "curb"
 
+puts "="*80
+puts "Curb"
+puts "="*80
+puts "\n"
+
 def features_dir
   File.join(Dir.pwd, 'features')
 end

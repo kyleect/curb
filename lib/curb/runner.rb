@@ -13,42 +13,52 @@ module Curb
       failed_tests = []
 
       @features.each do |feature|
+        puts "-"*80
         puts "Feature: #{feature.phrase}"
+        puts "-"*80
 
-        feature.steps.each do |step|
-          puts "#{step.type.capitalize}: #{step.phrase}"
+        feature.scenarios.each do |scenario|
+          puts "Scenario: #{scenario.phrase}"
 
-          handler = @handlers.find do |handler|
-            handler.test(step.phrase)
+          scenario.steps.each do |step|
+            puts "#{step.type.capitalize} #{step.phrase}"
+
+            handler = @handlers.find do |handler|
+              handler.test(step.phrase)
+            end
+
+            if handler.nil?
+              puts "\tNo handler defined. Skipping"
+              next
+            end
+
+            handler_start = Time.now
+
+            begin
+              handler.call(step.phrase)
+              puts "\tPassed"
+            rescue => e
+              failed_tests << [feature, step, e]
+              puts "\tFailed"
+            end
+
+            handler_end = Time.now
+
+            puts "\tTime elapsed #{(handler_end - handler_start)*1000} milliseconds"
           end
-
-          if handler.nil?
-            puts "\tNo handler defined. Skipping"
-            next
-          end
-
-          handler_start = Time.now
-
-          begin
-            handler.call(step.phrase)
-          rescue => e
-            failed_tests << [feature, step, e]
-          end
-
-          handler_end = Time.now
-
-          puts "\tTime elapsed #{(handler_end - handler_start)*1000} milliseconds"
         end
       end
 
       puts "\n"
-      puts "Failed Tests"
+      puts "-"*80
+      puts "Failed Tests (#{failed_tests.length})"
+      puts "-"*80
 
       failed_tests.each.with_index do |test, i|
         feature, step, ex = test
         backtrace = ex.backtrace.join("\n\t\t")
 
-        puts "\t#{i}) #{feature.phrase} - #{step.phrase}\n\t\t#{ex.class}: #{ex.message}\n\t\t#{backtrace}"
+        puts "#{i}) #{feature.phrase}: #{step.phrase}\n\t#{ex.class}: #{ex.message}\n\t#{backtrace}"
       end
     end
 
