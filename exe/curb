@@ -7,16 +7,32 @@ def features_dir
   File.join(Dir.pwd, 'features')
 end
 
+unless Dir.exist?(features_dir)
+  fail "No features directory was found: #{features_dir}"
+end
+
 def features_files
   Dir["#{features_dir}/**/*.feature"]
+end
+
+if features_files.empty?
+  fail "No feature files found"
 end
 
 def steps_dir
   File.join(features_dir, 'steps')
 end
 
+unless Dir.exist?(steps_dir)
+  fail "No steps directory was found"
+end
+
 def steps_files
   Dir["#{steps_dir}/**/*.rb"]
+end
+
+if steps_files.empty?
+  fail "No step files found"
 end
 
 # Include steps files
