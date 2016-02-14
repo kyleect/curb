@@ -1,5 +1,7 @@
 module Curb
   class ParsedFeature
+    attr_reader :steps
+
     def initialize(steps)
       @steps = steps
     end

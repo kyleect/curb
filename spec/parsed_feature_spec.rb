@@ -11,9 +11,23 @@ describe Curb::ParsedFeature do
       end
     end
 
+    describe :steps do
+      it :count do
+        expect(parsed_feature.steps.length).to eq 17
+      end
+
+      it :type do
+        expect(parsed_feature.steps.all? { |i| i.class.name == 'Curb::ParsedStep' }).to eq true
+      end
+    end
+
     describe :scenarios do
       it :count do
-        expect(parsed_feature.scenarios.length).to eq 1
+        expect(parsed_feature.scenarios.length).to eq 3
+      end
+
+      it :type do
+        expect(parsed_feature.scenarios.all? { |i| i.class.name == 'Curb::ParsedScenario' }).to eq true
       end
     end
   end
